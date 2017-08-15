@@ -2,6 +2,8 @@
 all:
 	make get-plexmediaserver
 	make get-plexurl
+	make get-myflix
+	make run-plexmediaserver
 
 get-plexmediaserver:
 	rm -rf pms-docker
@@ -16,8 +18,18 @@ run-plexmediaserver:
 		-d \
 		--name plex \
 		-e TZ="Amercia/Detroit" \
+		-e ADVERTISE_IP="http://127.0.0.1:32400/" \
 		-e PLEX_CLAIM="" \
-		-p 32400:32400 \
+		-h plex-complex \
+		-p 32400/tcp \
+		-p 3005/tcp \
+		-p 8324/tcp \
+		-p 32469/tcp \
+		-p 1900/udp \
+		-p 32410/udp \
+		-p 32412/udp \
+		-p 32413/udp \
+		-p 32414/udp \
 		-v config:/config \
 		-v trancode:/transcode \
 		-v MoImg:/home/myflix/myflix/MoImg \
@@ -42,10 +54,24 @@ run-plexurl:
 	docker run -d --rm -p 8080:8080 --name plexurl-complex -t plexurl-complex
 
 get-myflix:
+	rm -rf myflix
 	git clone https://github.com/eyedeekay/myflix
+	cd myflix && \
+	docker build -t myflix-complex .
+
+run-myflix:
+	cd myflix && \
+	make docker-run
+
 
 garbage-collect:
 	docker system prune -f
 
 clean:
+	docker rm -f plex ; \
+	docker rmi plexinc/pms-docker ; \
+	make garbage-collect; \
 	rm *.tar.gz
+
+stop:
+	docker stop plex
