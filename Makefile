@@ -15,9 +15,9 @@ get-plexmediaserver:
 
 run-plexmediaserver:
 	cd pms-docker && \
-	docker run \
+	docker run -d\
 		--rm \
-		-d \
+		--cap-drop all \
 		--name plex \
 		-e TZ="Amercia/Detroit" \
 		-e ADVERTISE_IP="http://127.0.0.1:32400/" \
@@ -53,7 +53,12 @@ export-plexurl:
 	docker export plexurl-complex -o plexurl.tar.gz
 
 run-plexurl:
-	docker run -d --rm -p 8080:8080 --name plexurl-complex -t plexurl-complex
+	docker run -d \
+		--cap-drop all \
+		--rm \
+		-p 8080:8080 \
+		--name plexurl-complex \
+		-t plexurl-complex
 
 get-myflix:
 	rm -rf myflix
