@@ -11,7 +11,7 @@ get-plexmediaserver:
 	rm -rf pms-docker
 	git clone https://github.com/eyedeekay/pms-docker
 	cd pms-docker && \
-	docker build -t pms-docker-complex .
+	docker build -f Dockerfile.alpine -t pms-docker-complex .
 
 run-plexmediaserver:
 	cd pms-docker && \
