@@ -4,6 +4,8 @@ all:
 	make get-plexurl
 	make get-myflix
 	make run-plexmediaserver
+	make run-plexurl
+	make run-myflix
 
 get-plexmediaserver:
 	rm -rf pms-docker
@@ -56,8 +58,9 @@ run-plexurl:
 get-myflix:
 	rm -rf myflix
 	git clone https://github.com/eyedeekay/myflix
+	cp tmdbapi.cfg myflix/scripts; \
 	cd myflix && \
-	docker build -t myflix-complex .
+	make docker-build
 
 run-myflix:
 	cd myflix && \
